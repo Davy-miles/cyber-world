@@ -123,6 +123,8 @@ export default {
         "gradient-shift": "gradient-shift 8s ease infinite",
         "blink": "blink 1s step-end infinite",
         "rotate-slow": "rotate-slow 20s linear infinite",
+        "fade-out-overlay": "fade-out-overlay 1.6s ease-in forwards",
+        "logo-spin-glow": "logo-spin-glow 4s ease-in-out infinite",
       },
     },
   },
