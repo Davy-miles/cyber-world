@@ -101,6 +101,15 @@ export default {
           "0%": { transform: "rotate(0deg)" },
           "100%": { transform: "rotate(360deg)" },
         },
+        "fade-out-overlay": {
+          "0%": { opacity: "1" },
+          "80%": { opacity: "1" },
+          "100%": { opacity: "0", visibility: "hidden" },
+        },
+        "logo-spin-glow": {
+          "0%,100%": { filter: "hue-rotate(0deg) drop-shadow(0 0 20px hsl(var(--primary)))" },
+          "50%": { filter: "hue-rotate(40deg) drop-shadow(0 0 40px hsl(var(--secondary)))" },
+        },
       },
       animation: {
         "fade-in-up": "fade-in-up 0.8s var(--transition-smooth) forwards",
