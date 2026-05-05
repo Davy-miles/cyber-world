@@ -5,10 +5,23 @@ interface Props {
 }
 
 /**
- * Provides a global "boot/exit" overlay.
- * - On mount: plays an entrance animation (scanlines + glitch fade-in)
- * - Exposes window.__triggerExitTransition(url) so any link can trigger
- *   the cyber "logout" transition before navigating.
+ * Componente: PageTransition
+ * ==========================
+ * Cria transições "cyberpunk" globais (boot/exit overlays)
+ * 
+ * BOOT SEQUENCE (ao montar página):
+ *   - Overlay com grid background + scanlines animadas
+ *   - Terminal boot messages aparecem em cascata
+ *   - Cursor piscante
+ *   - Desaparece automaticamente após 1.4s
+ * 
+ * EXIT SEQUENCE (ao clicar em link para Discord):
+ *   - Ativa quando window.__triggerExitTransition(url) é chamado
+ *   - Overlay com glitch/scan effects
+ *   - Abre URL em nova aba
+ *   - Volta ao estado idle após 300ms
+ * 
+ * Design: Estilo matrix/cyberpunk, feedback visual de ação
  */
 const PageTransition = ({ children }: Props) => {
   const [phase, setPhase] = useState<"entering" | "idle" | "exiting">("entering");
@@ -38,7 +51,8 @@ const PageTransition = ({ children }: Props) => {
   }, []);
 
   useEffect(() => {
-    (window as any).__triggerExitTransition = (url: string) => {
+    // Define função global segura de transição
+    (globalThis as unknown as { __triggerExitTransition: (url: string) => void }).__triggerExitTransition = (url: string) => {
       setPendingUrl(url);
       setPhase("exiting");
       setTimeout(() => {

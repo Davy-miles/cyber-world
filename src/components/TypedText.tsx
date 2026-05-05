@@ -1,13 +1,35 @@
 import { useEffect, useState } from "react";
 
+/**
+ * Interface: Props do TypedText
+ * =============================
+ * phrases: array de strings para digitar sequencialmente
+ * className: classes Tailwind para estilo customizado (opcional)
+ */
 interface Props {
-  phrases: string[];
-  className?: string;
+  phrases: string[];  // Ex: ["init dev_community", "exploit knowledge"]
+  className?: string; // Ex: "text-foreground text-xl"
 }
 
+/**
+ * Componente: TypedText
+ * =====================
+ * Efeito de digitação em tempo real (typing effect)
+ * 
+ * Fluxo:
+ * 1. Digita primeira frase caractere por caractere
+ * 2. Aguarda 1.8s com frase completa
+ * 3. Apaga a frase caractere por caractere
+ * 4. Passa para próxima frase (loop infinito)
+ */
 const TypedText = ({ phrases, className = "" }: Props) => {
+  // Estado 1: Texto exibido (cresce ao digitar, encolhe ao apagar)
   const [text, setText] = useState("");
+  
+  // Estado 2: Qual frase do array estamos digitando (0-indexed)
   const [phraseIdx, setPhraseIdx] = useState(0);
+  
+  // Estado 3: Modo de operação (false = digitando, true = apagando)
   const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {

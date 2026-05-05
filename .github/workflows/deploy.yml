@@ -1,0 +1,110 @@
+# GitHub Pages Deploy Workflow
+# ============================
+# Workflow automático que:
+# 1. Roda toda vez que você faz push para main
+# 2. Instala dependências
+# 3. Roda build do Vite
+# 4. Faz deploy na GitHub Pages
+# 
+# Configuração:
+# - Settings > Pages > Build and deployment
+# - Source: GitHub Actions
+# - Branch: (automático com este workflow)
+
+name: Deploy to GitHub Pages
+
+# Triggers: Quando executar?
+on:
+  # Quando há push para main (seus commits)
+  push:
+    branches:
+      - main  # ⚠️ MUDE PARA SUA BRANCH PRINCIPAL SE FOR DIFERENTE
+
+  # Permite disparo manual pelo GitHub Actions UI
+  workflow_dispatch:
+
+# Variáveis globais
+env:
+  NODE_VERSION: '18'  # Versão do Node.js a usar
+
+jobs:
+  # Job: Build
+  # ==========
+  build:
+    # Executa em máquina Linux (ubuntu-latest)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout do código
+      # ===========================
+      # Baixa seu repositório para a máquina de CI/CD
+      - name: Checkout código
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      # ====================
+      # Instala Node.js e npm na máquina
+      - name: Setup Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          # Cache do npm para acelerar builds (reutiliza dependências)
+          cache: 'npm'
+
+      # Step 3: Install dependências
+      # ============================
+      # Equivalente a executar "npm install" localmente
+      - name: Instalar dependências
+        run: npm install
+
+      # Step 4: Build do Vite
+      # ====================
+      # Gera arquivos otimizados em dist/
+      # Vite minifica, bundla e otimiza para produção
+      - name: Build com Vite
+        run: npm run build
+
+      # Step 5: Upload artifact
+      # ======================
+      # Armazena a pasta dist/ para usar no próximo job (deploy)
+      - name: Upload build artifact
+        uses: actions/upload-pages-artifact@v2
+        with:
+          # Pasta gerada pelo Vite que será feita deploy
+          path: './dist'
+
+  # Job: Deploy
+  # ===========
+  deploy:
+    # Depende do job "build" terminar com sucesso
+    needs: build
+    
+    # GitHub Pages precisa de permissões específicas
+    permissions:
+      pages: write      # Permissão para escrever na GitHub Pages
+      id-token: write   # Permissão para usar OIDC token (segurança)
+
+    # Executa em máquina Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Deploy para GitHub Pages
+      # ================================
+      # Usa ação oficial do GitHub para fazer deploy
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
+
+# Notas de configuração:
+# ======================
+# 1. Se seu repo é https://github.com/seu-usuario/cyber-world
+#    e quer que funcione em https://seu-usuario.github.io/cyber-world
+#    Então no vite.config.ts coloque: base: '/cyber-world/'
+#
+# 2. Se é um User Site (seu-usuario.github.io)
+#    Então base: '/' (já está assim)
+#
+# 3. Problemas comuns:
+#    - Build falha: revise erros no log do GitHub Actions
+#    - Site não aparece: Settings > Pages > Branch = "gh-pages"
+#    - 404 em sub-páginas: verifique base URL no vite.config.ts

@@ -9,34 +9,100 @@ import TypedText from "@/components/TypedText";
 import Reveal from "@/components/Reveal";
 import PageTransition from "@/components/PageTransition";
 import DiscordLiveStats from "@/components/DiscordLiveStats";
+import MusicPlayer from "@/components/MusicPlayer";
 import logo from "@/assets/cyber-world-logo.jpeg";
 
-// 👉 Substitua pelo ID do seu servidor Discord (Server Settings → Widget → Server ID)
-//    e ative "Enable Server Widget" para os dados ao vivo aparecerem.
-const DISCORD_GUILD_ID = "YOUR_GUILD_ID";
-const DISCORD_URL = "https://discord.gg/your-invite";
+/**
+ * Discord Widget Configuration
+ * =============================
+ * DISCORD_GUILD_ID: ID numérico do seu servidor Discord (APENAS o ID, não a URL completa!)
+ *   - Para obter: Server Settings → Widget → Server ID
+ *   - Exemplo: "1499736443860422686" (sem aspas na URL de API)
+ * 
+ * IMPORTANTE: O servidor precisa ter "Enable Server Widget" ativado em:
+ *   Settings → Widget → Enable Server Widget (ON)
+ * Sem isso, a API retornará erro 404.
+ */
+const DISCORD_GUILD_ID = "1499736443860422686"; // 🔧 CORRIGIDO: era URL completa, agora é só o ID
+const DISCORD_URL = "https://discord.gg/3TqHTUJMcw";
 
+/**
+ * Lista de canais do Discord com ícones e descrições
+ * ===================================================
+ * Cada canal representa uma comunidade especializada
+ * Os ícones são do Lucide React (biblioteca de ícones SVG)
+ * As cores usam gradientes Tailwind para visual cyberpunk
+ */
 const channels = [
+  // Desenvolvimento Full Stack - foco em web e backend
   { icon: Code2, name: "dev-fullstack", desc: "React, Node, Python, Go — code reviews, pair programming e projetos open source.", color: "from-purple-500 to-blue-500" },
+  
+  // Segurança Ofensiva - testes de penetração e hacking ético
   { icon: Shield, name: "cybersec-lab", desc: "CTFs semanais, write-ups, pentest, OSINT e hardening de sistemas.", color: "from-blue-500 to-cyan-400" },
+  
+  // Eletrônica e IoT - Arduino, microcontroladores e embarcados
   { icon: Bot, name: "robotica-iot", desc: "Arduino, ESP32, Raspberry Pi, ROS — do circuito ao deploy.", color: "from-fuchsia-500 to-purple-500" },
+  
+  // Engenharia e Cálculo - disciplinas acadêmicas
   { icon: Cpu, name: "engenharia", desc: "Cálculo, simulações, hardware design e estudos colaborativos.", color: "from-purple-600 to-indigo-500" },
+  
+  // Ferramentas e Produtividade - Linux, terminal, ambiente dev
   { icon: Terminal, name: "shell-zone", desc: "Linux, dotfiles, neovim, terminais e produtividade dev.", color: "from-indigo-500 to-blue-600" },
+  
+  // Dados e IA - Machine Learning, pipelines de dados
   { icon: Database, name: "data-ai", desc: "ML, LLMs, data engineering e pipelines em produção.", color: "from-violet-500 to-purple-600" },
 ];
 
+/**
+ * Handle do botão "Entrar no Discord"
+ * ===================================
+ * Função que:
+ * 1. Previne comportamento padrão do link
+ * 2. Ativa a animação de transição (boot/exit cyberpunk)
+ * 3. Abre o servidor Discord em nova aba
+ * 
+ * A função window.__triggerExitTransition é definida no PageTransition.tsx
+ * e cria uma animação de glitch antes de abrir o link
+ */
 const handleJoin = (e: React.MouseEvent) => {
   e.preventDefault();
-  (window as any).__triggerExitTransition?.(DISCORD_URL);
+  
+  // Chama a função de transição se existir (ela abre o Discord em nova aba)
+  // O ?. garante que não vai quebrar se a função não estiver disponível
+  const triggerTransition = (globalThis as unknown as { __triggerExitTransition?: (url: string) => void }).__triggerExitTransition;
+  triggerTransition?.(DISCORD_URL);
 };
 
+/**
+ * Componente Principal da Página
+ * ================================
+ * Renderiza a landing page do Cyber World com:
+ * - Animação de matrix rain de fundo
+ * - Rastreamento do mouse para efeitos parallax
+ * - Seções com animações de reveal
+ * - Stats ao vivo do Discord
+ * - Integração com transições cyberpunk
+ */
 const Index = () => {
+  // Estado do mouse para criar efeito parallax sutil no gradiente de fundo
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
+  /**
+   * useEffect: Rastreamento de Movimento do Mouse
+   * ==============================================
+   * Calcula a posição do mouse em valores normalizados (-10 a +10)
+   * Aplica um multiplicador (20) para criar efeito subtil no gradiente de fundo
+   * O gradiente se move levemente com o mouse, criando efeito de profundidade
+   */
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
-      setMouse({ x: (e.clientX / window.innerWidth - 0.5) * 20, y: (e.clientY / window.innerHeight - 0.5) * 20 });
+      // Normaliza coordenadas (0-1) → (-0.5 a 0.5) → multiplica por 20
+      const x = (e.clientX / window.innerWidth - 0.5) * 20;
+      const y = (e.clientY / window.innerHeight - 0.5) * 20;
+      setMouse({ x, y });
     };
+    
+    // Registra listener e remove ao desmontar
     window.addEventListener("mousemove", onMove);
     return () => window.removeEventListener("mousemove", onMove);
   }, []);
@@ -368,6 +434,9 @@ const Index = () => {
             </div>
           </div>
         </footer>
+
+        {/* Music Player */}
+        <MusicPlayer />
       </div>
     </PageTransition>
   );

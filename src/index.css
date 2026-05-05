@@ -130,4 +130,166 @@
   .text-glow {
     text-shadow: 0 0 30px hsl(var(--primary) / 0.6), 0 0 60px hsl(var(--secondary) / 0.4);
   }
+
+  /* Animações Cyberpunk */
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+
+  @keyframes fade-in {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-in-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fade-out-overlay {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; pointer-events: none; }
+  }
+
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { 
+      opacity: 1; 
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.5);
+    }
+    50% { 
+      opacity: 0.8; 
+      box-shadow: 0 0 40px hsl(var(--primary) / 0.8);
+    }
+  }
+
+  @keyframes rotate-slow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes logo-spin-glow {
+    0% { 
+      transform: rotate(0deg) scale(1); 
+      filter: brightness(1) hue-rotate(0deg);
+    }
+    50% { 
+      transform: rotate(180deg) scale(1.05); 
+      filter: brightness(1.2) hue-rotate(30deg);
+    }
+    100% { 
+      transform: rotate(360deg) scale(1); 
+      filter: brightness(1) hue-rotate(0deg);
+    }
+  }
+
+  @keyframes glitch {
+    0%, 100% { 
+      text-shadow: 
+        0.05em 0 0 hsl(var(--primary) / 0.8),
+        -0.05em 0 0 hsl(var(--secondary) / 0.8),
+        0 0 10px hsl(var(--primary) / 0.6);
+    }
+    25% { 
+      text-shadow: 
+        0.05em 0 0 hsl(var(--secondary) / 0.8),
+        -0.05em 0 0 hsl(var(--primary) / 0.8),
+        0 0 15px hsl(var(--secondary) / 0.6);
+    }
+    50% { 
+      text-shadow: 
+        -0.05em 0 0 hsl(var(--primary) / 0.8),
+        0.05em 0 0 hsl(var(--accent) / 0.8),
+        0 0 20px hsl(var(--accent) / 0.6);
+    }
+    75% { 
+      text-shadow: 
+        0.05em 0 0 hsl(var(--accent) / 0.8),
+        -0.05em 0 0 hsl(var(--primary) / 0.8),
+        0 0 25px hsl(var(--primary) / 0.6);
+    }
+  }
+
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* Classes de animação */
+  .animate-gradient-shift {
+    animation: gradient-shift 8s ease infinite;
+    background-size: 200% auto;
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.6s ease-out forwards;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+  }
+
+  .animate-fade-out-overlay {
+    animation: fade-out-overlay 1.4s ease-out forwards;
+  }
+
+  .animate-blink {
+    animation: blink 1s infinite;
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-rotate-slow {
+    animation: rotate-slow 20s linear infinite;
+  }
+
+  .animate-logo-spin-glow {
+    animation: logo-spin-glow 4s ease-in-out infinite;
+  }
+
+  .animate-glitch {
+    animation: glitch 0.3s ease-in-out infinite;
+  }
+
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+
+  /* Slider customizado */
+  .slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    background: hsl(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
+
+  .slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    background: hsl(var(--primary));
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.5);
+  }
 }

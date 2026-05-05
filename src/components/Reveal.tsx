@@ -1,13 +1,32 @@
 import { useEffect, useRef, useState, ReactNode } from "react";
 
+/**
+ * Interface: Props do Reveal
+ * ==========================
+ * children: conteúdo JSX a ser animado
+ * delay: atraso em ms antes de começar animação (para efeito cascata)
+ * className: classes Tailwind customizadas
+ */
 interface Props {
-  children: ReactNode;
-  delay?: number;
-  className?: string;
+  children: ReactNode;  // JSX/elementos a animar
+  delay?: number;       // Ex: 100ms para 2º elemento começar depois do 1º
+  className?: string;   // Classes CSS customizadas
 }
 
+/**
+ * Componente: Reveal
+ * ==================
+ * Anima elementos quando entram na viewport (scroll animation)
+ * 
+ * Técnica: Intersection Observer API (otimizado pelo navegador)
+ * Efeito: fade-in + slide-up (opacity 0→1, translateY 40px→0)
+ * Delay: permite stagger effect em grids
+ */
 const Reveal = ({ children, delay = 0, className = "" }: Props) => {
+  // Ref para monitorar elemento no DOM
   const ref = useRef<HTMLDivElement>(null);
+  
+  // Estado: elemento está visível na viewport?
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
