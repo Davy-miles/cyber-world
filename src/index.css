@@ -194,6 +194,14 @@
     }
   }
 
+  @keyframes flicker {
+    0%, 100% { opacity: 1; }
+    10% { opacity: 0.9; }
+    20% { opacity: 1; }
+    30% { opacity: 0.95; }
+    40% { opacity: 1; }
+  }
+
   @keyframes glitch {
     0%, 100% { 
       text-shadow: 
@@ -260,8 +268,19 @@
     animation: rotate-slow 20s linear infinite;
   }
 
-  .animate-logo-spin-glow {
-    animation: logo-spin-glow 4s ease-in-out infinite;
+  @keyframes logo-subtle-pulse {
+    0%, 100% { 
+      filter: brightness(1) drop-shadow(0 0 20px hsl(var(--primary)));
+      transform: scale(1);
+    }
+    50% { 
+      filter: brightness(1.1) drop-shadow(0 0 30px hsl(var(--secondary)));
+      transform: scale(1.02);
+    }
+  }
+
+  .animate-logo-subtle-pulse {
+    animation: logo-subtle-pulse 4s ease-in-out infinite;
   }
 
   .animate-glitch {
@@ -270,6 +289,29 @@
 
   .animate-marquee {
     animation: marquee 20s linear infinite;
+  }
+
+  /* Otimizações para mobile */
+  @media (max-width: 768px) {
+    .animate-rotate-slow {
+      animation-duration: 40s; /* Mais lento em mobile para economizar bateria */
+    }
+
+    .animate-marquee {
+      animation-duration: 30s; /* Mais lento em mobile */
+    }
+
+    .animate-gradient-shift {
+      animation-duration: 12s; /* Mais lento em mobile */
+    }
+
+    .glow-primary {
+      box-shadow: 0 0 20px hsl(var(--primary) / 0.3); /* Glow mais sutil em mobile */
+    }
+
+    .glass {
+      backdrop-filter: blur(10px); /* Blur mais leve em mobile */
+    }
   }
 
   /* Slider customizado */

@@ -112,136 +112,88 @@ const MusicPlayer = () => {
   const progress = (currentTime / currentTrack.duration) * 100;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 glass rounded-2xl p-4 w-80 glow-primary transition-all duration-300 hover:scale-105">
-      {/* Visualizador de Áudio */}
-      <div className="flex items-end justify-center gap-1 h-16 mb-4">
-        {visualizerBars.map((height, i) => (
+    <div className="fixed bottom-2 md:bottom-4 right-2 md:right-4 z-40 glass rounded-lg md:rounded-xl p-2 md:p-3 w-56 md:w-64 glow-primary transition-all duration-300 hover:scale-105 border border-primary/30">
+      {/* Visualizador Mini */}
+      <div className="flex items-end justify-center gap-0.5 h-6 md:h-8 mb-2 md:mb-3">
+        {visualizerBars.slice(0, 10).map((height, i) => (
           <div
             key={i}
-            className="w-2 bg-gradient-to-t from-primary to-secondary rounded-t transition-all duration-100"
+            className="flex-1 bg-gradient-to-t from-primary to-secondary rounded-t transition-all duration-100"
             style={{
-              height: isPlaying ? `${height}%` : '4%',
-              animationDelay: `${i * 20}ms`,
+              height: isPlaying ? `${height}%` : '2px',
             }}
           />
         ))}
       </div>
 
-      {/* Info da Música */}
-      <div className="mb-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex-1">
-            <h3 className="font-bold text-sm text-gradient truncate">{currentTrack.title}</h3>
-            <p className="text-xs text-muted-foreground">{currentTrack.artist}</p>
-          </div>
-          <button
-            onClick={() => setIsLiked(!isLiked)}
-            className="ml-2 p-2 rounded-lg hover:bg-primary/20 transition-colors"
-          >
-            <Heart 
-              className={`w-4 h-4 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
-            />
-          </button>
-        </div>
-
-        {/* Progress Bar */}
-        <div className="mb-2">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground font-mono">
-            <span>{formatTime(currentTime)}</span>
-            <div className="flex-1 h-1 bg-border/50 rounded-full overflow-hidden">
-              <div 
-                className="h-full bg-gradient-primary transition-all duration-1000 relative"
-                style={{ width: `${progress}%` }}
-              >
-                <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2 h-2 bg-primary rounded-full animate-pulse" />
-              </div>
-            </div>
-            <span>{formatTime(currentTrack.duration)}</span>
-          </div>
-        </div>
+      {/* Info compacta */}
+      <div className="mb-1 md:mb-2">
+        <h3 className="font-bold text-xs text-gradient truncate">{currentTrack.title}</h3>
+        <p className="text-[10px] text-muted-foreground truncate">{currentTrack.artist}</p>
       </div>
 
-      {/* Controles Principais */}
-      <div className="flex items-center justify-center gap-2 mb-3">
-        <button
-          onClick={() => setIsShuffled(!isShuffled)}
-          className={`p-2 rounded-lg transition-colors ${isShuffled ? 'bg-primary/20 text-primary' : 'hover:bg-primary/10 text-muted-foreground'}`}
-        >
-          <Shuffle className="w-4 h-4" />
-        </button>
-        
+      {/* Progress bar */}
+      <div className="mb-1 md:mb-2 h-1 bg-border/50 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-primary transition-all duration-1000"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Controles compactos */}
+      <div className="flex items-center justify-between gap-0.5 md:gap-1">
         <button
           onClick={handlePrevious}
-          className="p-2 rounded-lg hover:bg-primary/10 transition-colors text-muted-foreground"
+          className="p-1 rounded hover:bg-primary/20 transition-colors text-muted-foreground hover:text-primary"
+          title="Anterior"
         >
-          <SkipBack className="w-4 h-4" />
+          <SkipBack className="w-3 h-3" />
         </button>
 
         <button
           onClick={handlePlayPause}
-          className="p-3 rounded-full bg-gradient-primary hover:opacity-90 transition-all glow-primary"
+          className="p-1.5 md:p-2 rounded bg-gradient-primary hover:opacity-90 transition-all"
         >
           {isPlaying ? (
-            <Pause className="w-5 h-5 text-foreground" />
+            <Pause className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground" />
           ) : (
-            <Play className="w-5 h-5 text-foreground ml-0.5" />
+            <Play className="w-3 h-3 md:w-3.5 md:h-3.5 text-foreground ml-0.5" />
           )}
         </button>
 
         <button
           onClick={handleNext}
-          className="p-2 rounded-lg hover:bg-primary/10 transition-colors text-muted-foreground"
+          className="p-1 rounded hover:bg-primary/20 transition-colors text-muted-foreground hover:text-primary"
+          title="Próxima"
         >
-          <SkipForward className="w-4 h-4" />
+          <SkipForward className="w-3 h-3" />
+        </button>
+
+        <button
+          onClick={() => setIsShuffled(!isShuffled)}
+          className={`p-1 rounded transition-colors ${isShuffled ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-primary'}`}
+          title="Embaralhar"
+        >
+          <Shuffle className="w-3 h-3" />
         </button>
 
         <button
           onClick={() => setIsRepeating(!isRepeating)}
-          className={`p-2 rounded-lg transition-colors ${isRepeating ? 'bg-primary/20 text-primary' : 'hover:bg-primary/10 text-muted-foreground'}`}
+          className={`p-1 rounded transition-colors ${isRepeating ? 'bg-primary/20 text-primary' : 'text-muted-foreground hover:text-primary'}`}
+          title="Repetir"
         >
-          <Repeat className="w-4 h-4" />
+          <Repeat className="w-3 h-3" />
         </button>
-      </div>
 
-      {/* Volume Control */}
-      <div className="flex items-center gap-2">
-        <Volume2 className="w-4 h-4 text-muted-foreground" />
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={volume}
-          onChange={(e) => setVolume(Number(e.target.value))}
-          className="flex-1 h-1 bg-border/50 rounded-full appearance-none cursor-pointer slider"
-          style={{
-            background: `linear-gradient(to right, hsl(var(--primary)) 0%, hsl(var(--primary)) ${volume}%, hsl(var(--border)) ${volume}%, hsl(var(--border)) 100%)`
-          }}
-        />
-        <span className="text-xs text-muted-foreground font-mono w-8">{volume}%</span>
-      </div>
-
-      {/* Playlist (minimizada) */}
-      <div className="mt-3 pt-3 border-t border-border/30">
-        <div className="text-xs text-muted-foreground font-mono mb-2">Playlist</div>
-        <div className="space-y-1 max-h-20 overflow-y-auto">
-          {tracks.map((track, index) => (
-            <button
-              key={track.id}
-              onClick={() => {
-                setCurrentTrackIndex(index);
-                setCurrentTime(0);
-              }}
-              className={`w-full text-left p-1 rounded text-xs transition-colors ${
-                index === currentTrackIndex 
-                  ? 'bg-primary/20 text-primary' 
-                  : 'hover:bg-primary/10 text-muted-foreground'
-              }`}
-            >
-              <div className="truncate">{track.title}</div>
-              <div className="text-[10px] opacity-70">{track.artist}</div>
-            </button>
-          ))}
-        </div>
+        <button
+          onClick={() => setIsLiked(!isLiked)}
+          className="p-1 rounded hover:bg-primary/20 transition-colors"
+          title="Favoritar"
+        >
+          <Heart
+            className={`w-3 h-3 transition-colors ${isLiked ? 'fill-red-500 text-red-500' : 'text-muted-foreground hover:text-red-400'}`}
+          />
+        </button>
       </div>
     </div>
   );
