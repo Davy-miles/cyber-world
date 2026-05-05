@@ -167,20 +167,30 @@ else
     exit 1
 fi
 
-# Step 6: Final message
+# Step 6: GitHub Pages Configuration Check
 echo ""
+echo -e "${YELLOW}⚙️  Verificando configuração GitHub Pages...${NC}"
+echo -e "${BLUE}📋 CONFIGURAÇÃO MANUAL NECESSÁRIA:${NC}"
+echo -e "   1. 🌐 Acesse: https://github.com/davy-miles/cyber-world/settings/pages"
+echo -e "   2. 📡 Source: Selecione ${CYAN}Deploy from a branch${NC}"
+echo -e "   3. 🌿 Branch: Selecione ${CYAN}gh-pages${NC} / ${CYAN}(root)${NC}"
+echo -e "   4. 💾 Save e aguarde 2-3 minutos"
+echo ""
+
+# Step 7: Final message
 echo -e "${GREEN}🎉 Deploy iniciado com sucesso!${NC}"
-echo -e "${BLUE}📌 Ações GitHub vão processar e publicar em alguns minutos...${NC}"
+echo -e "${BLUE}📌 Workflow GitHub Actions vai criar branch gh-pages automaticamente${NC}"
 echo -e "${CYAN}🔗 Monitorar: https://github.com/davy-miles/cyber-world/actions${NC}"
 echo -e "${CYAN}🌐 Site: https://davy-miles.github.io/cyber-world/${NC}"
 echo ""
 
 # Show next steps
 echo -e "${BLUE}📋 Próximos passos:${NC}"
-echo -e "   1. ⏱️  Aguardar GitHub Actions (2-5 minutos)"
-echo -e "   2. 🔍 Verificar deploy em: https://github.com/davy-miles/cyber-world/actions"
-echo -e "   3. 🌐 Acessar site: https://davy-miles.github.io/cyber-world/"
-echo -e "   4. 🐛 Se algo der errado, verifique: Settings > Pages"
+echo -e "   1. ⚙️  Configure GitHub Pages (acima)"
+echo -e "   2. ⏱️  Aguardar workflow (2-5 minutos)"
+echo -e "   3. 🔍 Verificar branch gh-pages criada"
+echo -e "   4. 🌐 Acessar site quando publicado"
+echo -e "   5. 🐛 Problemas? Verifique Actions tab"
 echo ""
 
-echo -e "${GREEN}✨ CYBER//WORLD deploy concluído! ✨${NC}"
+echo -e "${GREEN}✨ CYBER//WORLD branch deploy concluído! ✨${NC}"

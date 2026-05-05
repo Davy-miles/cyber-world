@@ -1,17 +1,18 @@
-# GitHub Pages Deploy Workflow
-# ============================
+# GitHub Pages Deploy Workflow - BRANCH DEPLOY
+# ==============================================
 # Workflow automático que:
 # 1. Roda toda vez que você faz push para main
 # 2. Instala dependências
 # 3. Roda build do Vite
-# 4. Faz deploy na GitHub Pages
+# 4. Faz deploy automático na branch gh-pages
+# 5. GitHub Pages publica a branch gh-pages
 # 
 # Configuração:
 # - Settings > Pages > Build and deployment
-# - Source: GitHub Actions
-# - Branch: (automático com este workflow)
+# - Source: Deploy from a branch
+# - Branch: gh-pages / (root)
 
-name: Deploy to GitHub Pages
+name: Deploy to GitHub Pages (Branch)
 
 # Triggers: Quando executar?
 on:
@@ -28,24 +29,31 @@ env:
   NODE_VERSION: '18'  # Versão do Node.js a usar
 
 jobs:
-  # Job: Build
-  # ==========
-  build:
+  # Job: Build and Deploy (único job para simplificar)
+  # ===============================================
+  build-and-deploy:
     # Executa em máquina Linux (ubuntu-latest)
     runs-on: ubuntu-latest
+
+    # Permissões necessárias para fazer push na branch
+    permissions:
+      contents: write  # Permissão para escrever no repositório (criar branch)
 
     steps:
       # Step 1: Checkout do código
       # ===========================
       # Baixa seu repositório para a máquina de CI/CD
       - name: Checkout código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+        with:
+          # Token completo para poder criar branch
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       # Step 2: Setup Node.js
       # ====================
       # Instala Node.js e npm na máquina
       - name: Setup Node.js ${{ env.NODE_VERSION }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           # Cache do npm para acelerar builds (reutiliza dependências)
@@ -64,47 +72,45 @@ jobs:
       - name: Build com Vite
         run: npm run build
 
-      # Step 5: Upload artifact
-      # ======================
-      # Armazena a pasta dist/ para usar no próximo job (deploy)
-      - name: Upload build artifact
-        uses: actions/upload-pages-artifact@v2
+      # Step 5: Deploy para branch gh-pages
+      # =================================
+      # Usa action para fazer push automático da pasta dist/
+      - name: Deploy para gh-pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
+          # Token para autenticação
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           # Pasta gerada pelo Vite que será feita deploy
-          path: './dist'
+          publish_dir: ./dist
+          # Branch de destino (cria automaticamente se não existir)
+          publish_branch: gh-pages
+          # Force push para sobrescrever branch
+          force_orphan: true
+          # Commit message personalizada
+          commit_message: "🚀 Auto deploy: ${{ github.sha }}"
+          # Nome e email do commit
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
 
-  # Job: Deploy
-  # ===========
-  deploy:
-    # Depende do job "build" terminar com sucesso
-    needs: build
-    
-    # GitHub Pages precisa de permissões específicas
-    permissions:
-      pages: write      # Permissão para escrever na GitHub Pages
-      id-token: write   # Permissão para usar OIDC token (segurança)
-
-    # Executa em máquina Linux
-    runs-on: ubuntu-latest
-
-    steps:
-      # Step 1: Deploy para GitHub Pages
-      # ================================
-      # Usa ação oficial do GitHub para fazer deploy
-      - name: Deploy para GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
-
-# Notas de configuração:
-# ======================
-# 1. Se seu repo é https://github.com/seu-usuario/cyber-world
-#    e quer que funcione em https://seu-usuario.github.io/cyber-world
-#    Então no vite.config.ts coloque: base: '/cyber-world/'
+# Notas de configuração - BRANCH DEPLOY:
+# =====================================
+# 1. CONFIGURAÇÃO MANUAL (GitHub Pages):
+#    - Vá para: Settings > Pages
+#    - Source: "Deploy from a branch"
+#    - Branch: "gh-pages" / "(root)"
+#    - Save e aguarde 2-3 minutos
 #
-# 2. Se é um User Site (seu-usuario.github.io)
-#    Então base: '/' (já está assim)
+# 2. Vite Config (já configurado):
+#    - base: '/cyber-world/' (para project sites)
+#    - Se for user site: base: '/'
 #
-# 3. Problemas comuns:
-#    - Build falha: revise erros no log do GitHub Actions
-#    - Site não aparece: Settings > Pages > Branch = "gh-pages"
-#    - 404 em sub-páginas: verifique base URL no vite.config.ts
+# 3. Workflow automático:
+#    - Push para main → trigger workflow
+#    - Build → deploy para branch gh-pages
+#    - GitHub Pages publica gh-pages automaticamente
+#
+# 4. Problemas comuns:
+#    - Build falha: revise Actions tab
+#    - Branch não aparece: aguarde workflow terminar
+#    - 404: verifique base URL no vite.config.ts
+#    - Permissões: contents: write já configurado

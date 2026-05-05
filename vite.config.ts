@@ -15,10 +15,11 @@ import { componentTagger } from "lovable-tagger";
  * - Deduplicação: evita múltiplas versões do mesmo pacote
  */
 export default defineConfig(({ mode }) => ({
-  // Base path para GitHub Pages
-  // Se usar um repo customizado como /cyber-world, mude para: base: '/cyber-world/'
-  // Para domínio raiz, deixe como '/'
-  base: '/',
+  // Base path para GitHub Pages - BRANCH DEPLOY
+  // Para project sites: base: '/repo-name/'
+  // Para user sites: base: '/'
+  // Seu repo: cyber-world → base: '/cyber-world/'
+  base: '/cyber-world/',
   
   /**
    * Servidor de Desenvolvimento
