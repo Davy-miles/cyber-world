@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Play, Pause, SkipBack, SkipForward, Volume2, Heart, Repeat, Shuffle } from "lucide-react";
 
 interface Track {
@@ -77,13 +77,13 @@ const MusicPlayer = () => {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isPlaying, currentTrack.duration, isRepeating]);
+  }, [isPlaying, currentTrack.duration, isRepeating, handleNext]);
 
   const handlePlayPause = () => {
     setIsPlaying(!isPlaying);
   };
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (isShuffled) {
       const randomIndex = Math.floor(Math.random() * tracks.length);
       setCurrentTrackIndex(randomIndex);
@@ -91,7 +91,7 @@ const MusicPlayer = () => {
       setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
     }
     setCurrentTime(0);
-  };
+  }, [isShuffled]);
 
   const handlePrevious = () => {
     if (currentTime > 3) {

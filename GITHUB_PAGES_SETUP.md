@@ -24,15 +24,15 @@ Build and deployment
 └── (não selecione "Deploy from a branch")
 ```
 
-**IMPORTANTE**: 
-- ❌ **NÃO** selecione "Deploy from a branch"
+**IMPORTANTE**:
 - ✅ **SELECIONE** "GitHub Actions"
+- ❌ **NÃO** selecione "Deploy from a branch"
 
 ### Por que GitHub Actions?
 - Nosso workflow `.github/workflows/deploy.yml` já faz tudo
 - Build automático com Vite
-- Deploy otimizado para produção
-- Cache e performance melhores
+- Deploy direto via GitHub Pages
+- Melhor performance e confiabilidade
 
 ---
 
@@ -46,19 +46,19 @@ Após selecionar "GitHub Actions":
    ```
 
 2. **Workflow status**: Role para baixo para ver workflows
-   - Deve mostrar "Deploy to GitHub Pages" como ✅ Active
+   - Deve mostrar "Deploy to GitHub Pages (Actions)" como ativo
 
 ---
 
 ## 🔄 Passo 4: Verificar Workflow
 
 1. Vá para: https://github.com/davy-miles/cyber-world/actions
-2. Procure o workflow "Deploy to GitHub Pages"
+2. Procure o workflow "Deploy to GitHub Pages (Actions)"
 3. Deve estar **✅ verde** (sucesso) ou **🟡 amarelo** (executando)
 
 ### Se estiver vermelho ❌:
 - Clique no workflow para ver erros
-- Geralmente é problema de permissões
+- Geralmente é problema de permissões ou build
 
 ---
 
@@ -69,10 +69,7 @@ Se o workflow falhar, verifique permissões:
 1. **Settings > Actions > General**
 2. **Workflow permissions**:
    ```
-   ✅ Allow GitHub Actions to create and approve pull requests
-   ✅ Allow GitHub Actions to run workflows on forked pull requests
    ✅ Read and write permissions
-   ✅ Allow GitHub Actions to approve pull requests
    ```
 
 3. **Save changes**
@@ -98,6 +95,24 @@ Primeiro deploy pode demorar **5-10 minutos**:
 **Solução**:
 - Verifique se selecionou "GitHub Actions" em Settings > Pages
 - Aguarde o workflow terminar (pode demorar 10 min)
+
+### Erro 2: "Tela branca"
+```
+❌ White screen
+```
+**Solução**:
+- Verifique se o `base` no `vite.config.ts` está correto: `'/cyber-world/'`
+- Verifique se o `BrowserRouter` no `App.tsx` tem `basename="/cyber-world/"`
+- Abra o console do navegador (F12) para ver erros JavaScript
+
+### Erro 3: "Build falha"
+```
+❌ Build failed
+```
+**Solução**:
+- Vá para Actions tab e clique no workflow vermelho
+- Verifique os logs de erro
+- Geralmente é problema de dependências ou sintaxe
 
 ### Erro 2: "Workflow failed"
 ```
