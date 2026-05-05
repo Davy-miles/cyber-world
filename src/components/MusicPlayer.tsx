@@ -45,6 +45,36 @@ const MusicPlayer = () => {
 
   const currentTrack = tracks[currentTrackIndex];
 
+  // Definir handlers ANTES de usá-los em useEffect
+  const handleNext = useCallback(() => {
+    if (isShuffled) {
+      const randomIndex = Math.floor(Math.random() * tracks.length);
+      setCurrentTrackIndex(randomIndex);
+    } else {
+      setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
+    }
+    setCurrentTime(0);
+  }, [isShuffled, tracks.length]);
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const handlePrevious = () => {
+    if (currentTime > 3) {
+      setCurrentTime(0);
+    } else {
+      setCurrentTrackIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
+      setCurrentTime(0);
+    }
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
   // Animação do visualizador
   useEffect(() => {
     if (!isPlaying) return;
@@ -78,35 +108,6 @@ const MusicPlayer = () => {
 
     return () => clearInterval(interval);
   }, [isPlaying, currentTrack.duration, isRepeating, handleNext]);
-
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying);
-  };
-
-  const handleNext = useCallback(() => {
-    if (isShuffled) {
-      const randomIndex = Math.floor(Math.random() * tracks.length);
-      setCurrentTrackIndex(randomIndex);
-    } else {
-      setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
-    }
-    setCurrentTime(0);
-  }, [isShuffled, tracks.length]);
-
-  const handlePrevious = () => {
-    if (currentTime > 3) {
-      setCurrentTime(0);
-    } else {
-      setCurrentTrackIndex((prev) => (prev - 1 + tracks.length) % tracks.length);
-      setCurrentTime(0);
-    }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
 
   const progress = (currentTime / currentTrack.duration) * 100;
 
