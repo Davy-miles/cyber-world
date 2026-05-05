@@ -91,7 +91,7 @@ const MusicPlayer = () => {
       setCurrentTrackIndex((prev) => (prev + 1) % tracks.length);
     }
     setCurrentTime(0);
-  }, [isShuffled]);
+  }, [isShuffled, tracks.length]);
 
   const handlePrevious = () => {
     if (currentTime > 3) {
