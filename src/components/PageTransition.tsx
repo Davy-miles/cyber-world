@@ -55,10 +55,7 @@ const PageTransition = ({ children }: Props) => {
     (globalThis as unknown as { __triggerExitTransition: (url: string) => void }).__triggerExitTransition = (url: string) => {
       setPendingUrl(url);
       setPhase("exiting");
-      setTimeout(() => {
-        window.open(url, "_blank", "noopener,noreferrer");
-        setTimeout(() => setPhase("idle"), 300);
-      }, 1200);
+      setTimeout(() => setPhase("idle"), 1500);
     };
   }, []);
 

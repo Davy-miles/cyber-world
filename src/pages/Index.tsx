@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Code2, Shield, Cpu, Bot, Terminal, Users, Zap, Github,
@@ -64,13 +64,29 @@ const channels = [
  * A função window.__triggerExitTransition é definida no PageTransition.tsx
  * e cria uma animação de glitch antes de abrir o link
  */
-const handleJoin = (e: React.MouseEvent) => {
+const handleJoin = (e: MouseEvent<HTMLButtonElement>) => {
   e.preventDefault();
-  
-  // Chama a função de transição se existir (ela abre o Discord em nova aba)
-  // O ?. garante que não vai quebrar se a função não estiver disponível
-  const triggerTransition = (globalThis as unknown as { __triggerExitTransition?: (url: string) => void }).__triggerExitTransition;
-  triggerTransition?.(DISCORD_URL);
+
+  const triggerTransition = (globalThis as unknown as {
+    __triggerExitTransition?: (url: string) => void;
+  }).__triggerExitTransition;
+
+  const opened = window.open(DISCORD_URL, "_blank", "noopener,noreferrer");
+
+  if (!triggerTransition) {
+    if (!opened) {
+      window.location.href = DISCORD_URL;
+    }
+    return;
+  }
+
+  triggerTransition(DISCORD_URL);
+
+  if (!opened) {
+    setTimeout(() => {
+      window.location.href = DISCORD_URL;
+    }, 1400);
+  }
 };
 
 /**
